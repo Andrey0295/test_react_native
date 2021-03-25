@@ -4,13 +4,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import LoadingScreen from "./LoadingScreen";
 import WebViewScreen from "./WebViewScreen";
-import { View, Text, StyleSheet } from "react-native";
+
+import { View, StyleSheet, Button } from "react-native";
 
 class MainScreen extends Component {
   state = {
     links: [],
     isLoading: false,
-    firstLaunch: null,
+    firstLaunch: true,
   };
 
   async componentDidMount() {
@@ -34,6 +35,12 @@ class MainScreen extends Component {
     this.setState({ links: responce.data });
   }
 
+  onToggleUrl = () => {
+    this.setState((prevState) => ({
+      firstLaunch: !prevState.firstLaunch,
+    }));
+  };
+
   render() {
     const url = this.state.firstLaunch
       ? this.state.links.link //google
@@ -42,6 +49,11 @@ class MainScreen extends Component {
     return (
       <View style={styles.mainScreenBlock}>
         {this.state.isLoading ? <LoadingScreen /> : <WebViewScreen url={url} />}
+        {this.state.firstLaunch ? (
+          <Button title="Home" onPress={this.onToggleUrl} />
+        ) : (
+          <Button title="Link" onPress={this.onToggleUrl} />
+        )}
       </View>
     );
   }
@@ -54,7 +66,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "lightgray",
   },
 });
 
