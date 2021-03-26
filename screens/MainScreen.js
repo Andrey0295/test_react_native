@@ -1,31 +1,63 @@
 import React, { Component } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ScreenOrientation from "expo-screen-orientation";
 
 import LoadingScreen from "./LoadingScreen";
 import WebViewScreen from "./WebViewScreen";
 
-import { View, StyleSheet, Button } from "react-native";
+import { View, StyleSheet, Button, BackHandler } from "react-native";
 
 class MainScreen extends Component {
   state = {
     links: [],
     isLoading: false,
-    firstLaunch: true,
+    firstLaunchLink: true,
+  };
+
+  changeScreenOrientation() {
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.ALL);
+  }
+
+  backAction = () => {
+    // onPress: () => BackHandler.exitApp();
+    if (this.state.firstLaunchLink) {
+      this.setState((prevState) => ({
+        firstLaunchLink: !prevState.firstLaunchLink,
+      }));
+    }
+
+    return true;
   };
 
   async componentDidMount() {
     this.setState({ isLoading: true });
-    await this.fetchLinks();
+    setTimeout(() => {
+      this.fetchLinks();
+    }, 2000);
+    // await this.fetchLinks();
 
-    AsyncStorage.getItem("alreadyLaunched").then((value) => {
+    await AsyncStorage.getItem("alreadyLaunched").then((value) => {
       if (value == null) {
         AsyncStorage.setItem("alreadyLaunched", "true");
-        this.setState({ firstLaunch: true });
+        this.setState({ firstLaunchLink: true });
       } else {
-        this.setState({ firstLaunch: false });
+        this.setState({ firstLaunchLink: false });
       }
     });
+    this.changeScreenOrientation();
+
+    BackHandler.addEventListener("hardwareBackPress", this.backAction);
+  }
+
+  storeData = async (value) => {
+    const jsonValue = JSON.stringify(value);
+    await AsyncStorage.setItem("@storage_Key", jsonValue);
+    console.log(jsonValue);
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    this.storeData(this.state);
   }
 
   async fetchLinks() {
@@ -37,24 +69,39 @@ class MainScreen extends Component {
 
   onToggleUrl = () => {
     this.setState((prevState) => ({
-      firstLaunch: !prevState.firstLaunch,
+      firstLaunchLink: !prevState.firstLaunchLink,
     }));
   };
 
   render() {
-    const url = this.state.firstLaunch
+    const url = this.state.firstLaunchLink
       ? this.state.links.link //google
       : this.state.links.home; //youtube
 
     return (
-      <View style={styles.mainScreenBlock}>
-        {this.state.isLoading ? <LoadingScreen /> : <WebViewScreen url={url} />}
-        {this.state.firstLaunch ? (
-          <Button title="Home" onPress={this.onToggleUrl} />
+      <>
+        {this.state.isLoading ? (
+          <LoadingScreen />
         ) : (
-          <Button title="Link" onPress={this.onToggleUrl} />
+          <View style={styles.mainScreenBlock}>
+            <WebViewScreen url={url} />
+            {this.state.firstLaunchLink ? (
+              <Button title="Home" onPress={this.onToggleUrl} />
+            ) : (
+              <Button title="Link" onPress={this.onToggleUrl} />
+            )}
+          </View>
         )}
-      </View>
+      </>
+
+      // <View style={styles.mainScreenBlock}>
+      //   {this.state.isLoading ? <LoadingScreen /> : <WebViewScreen url={url} />}
+      //   {this.state.firstLaunchLink ? (
+      //     <Button title="Home" onPress={this.onToggleUrl} />
+      //   ) : (
+      //     <Button title="Link" onPress={this.onToggleUrl} />
+      //   )}
+      // </View>
     );
   }
 }

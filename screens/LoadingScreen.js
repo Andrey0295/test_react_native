@@ -1,19 +1,27 @@
 import React, { Component } from "react";
 
 import WebView from "react-native-webview";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 
 const LoadingScreen = () => {
   return (
-    <View>
-      <Text style={styles.text}>Loading...</Text>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "white",
+      }}
+    >
+      <ActivityIndicator size="large" color="black" />
+      {/* <Text style={styles.text}>Loading...</Text> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   text: {
-    color: "#fff",
+    color: "black",
     fontSize: 30,
   },
 });
