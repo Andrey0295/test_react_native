@@ -25,7 +25,7 @@ export default function App() {
 }
 
 const headerOptions = {
-  title: "My home",
+  title: "Home",
   headerStyle: {
     backgroundColor: "black",
   },
