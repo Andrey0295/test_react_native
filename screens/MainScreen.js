@@ -4,7 +4,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ScreenOrientation from "expo-screen-orientation";
 
 import LoadingScreen from "./LoadingScreen";
-import WebViewScreen from "./WebViewScreen";
 import MainBlock from "../Components/MainBlock/MainBlock";
 
 import { View, StyleSheet, Button, BackHandler } from "react-native";
@@ -92,16 +91,5 @@ class MainScreen extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  mainScreenBlock: {
-    width: "100%",
-    height: "100%",
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "lightgray",
-  },
-});
 
 export default MainScreen;

@@ -15,8 +15,6 @@ const MainBlock = ({ webViewUrl, toggleUrl, firstLaunch }) => {
   );
 };
 
-export default MainBlock;
-
 const styles = StyleSheet.create({
   mainScreenBlock: {
     width: "100%",
@@ -27,3 +25,5 @@ const styles = StyleSheet.create({
     backgroundColor: "lightgray",
   },
 });
+
+export default MainBlock;
