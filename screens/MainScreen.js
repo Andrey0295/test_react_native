@@ -6,7 +6,7 @@ import * as ScreenOrientation from "expo-screen-orientation";
 import LoadingScreen from "./LoadingScreen";
 import MainBlock from "../Components/MainBlock/MainBlock";
 
-import { View, StyleSheet, Button, BackHandler } from "react-native";
+import { BackHandler } from "react-native";
 
 class MainScreen extends Component {
   state = {
